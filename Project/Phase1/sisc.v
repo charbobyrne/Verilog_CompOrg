@@ -70,7 +70,7 @@ module sisc (clk, rst_f, ir);
   );
 
   // ALU
-  // Note: funct is provided as mm (ir[27:24]) for REG_OP-type instructions.
+  // funct is provided as mm (ir[27:24]) for REG_OP-type instructions.
   alu my_alu (
     .clk(clk),
     .rsa(rsa),
