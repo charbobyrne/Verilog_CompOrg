@@ -86,22 +86,22 @@ module ctrl (clk, rst_f, opcode, mm, stat, rf_we, alu_op, wb_sel);
     alu_op = 4'b0000;
 
     // Decide the ALU mode for the current instruction
-    // (mode bits are alu_op[3:1])
+    // mode bits are alu_op[3:1]
     // Keep mode stable through execute/mem/writeback so alu_result isn't overwritten.
     if (opcode == REG_OP) begin
-      alu_op[3:1] = 3'b000;     // Rsa <funct> Rsb (funct comes from mm in sisc.v)
+      alu_op[3:1] = 3'b000;     // Rsa <funct> Rsb
     end
     else if (opcode == REG_IM && mm == 4'h1) begin
       alu_op[3:1] = 3'b010;     // ADI: Rsa + imm
     end
     else begin
-      alu_op[3:1] = 3'b000;     // harmless default
+      alu_op[3:1] = 3'b000;     // default
     end
 
     case (present_state)
 
       execute: begin
-        // Request status update ONLY during execute for real ALU ops
+        // Request status update only during execute for real ALU ops
         if (opcode == REG_OP) begin
           alu_op[0] = 1'b1;
         end
@@ -112,12 +112,14 @@ module ctrl (clk, rst_f, opcode, mm, stat, rf_we, alu_op, wb_sel);
       end
 
       mem: begin
-        // Hold mode; do not update flags
+        // Hold mode
+        // do not update flags
         alu_op[0] = 1'b0;
       end
 
       writeback: begin
-        // Hold mode; do not update flags
+        // Hold mode
+        // do not update flags
         alu_op[0] = 1'b0;
 
         // Write register for REG_OP and ADI
@@ -132,7 +134,7 @@ module ctrl (clk, rst_f, opcode, mm, stat, rf_we, alu_op, wb_sel);
       end
 
       default: begin
-        // fetch/decode/start states: keep defaults (and ALU mode already chosen above)
+        // fetch/decode/start states: keep defaults
         alu_op[0] = 1'b0;
       end
 
