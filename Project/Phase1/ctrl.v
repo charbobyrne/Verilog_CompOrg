@@ -1,5 +1,6 @@
 // ECE:3350 SISC computer project
 // finite state machine
+// This File needs to be complete for Project 1
 
 `timescale 1ns/100ps
 
@@ -7,7 +8,7 @@ module ctrl (clk, rst_f, opcode, mm, stat, rf_we, alu_op, wb_sel);
 
   /* Declare the ports listed above as inputs or outputs.  Note that this is
      only the signals for part 1.  You will be adding signals for parts 2,
-     2, and 4. /*
+     2, and 4. */
   
   input clk, rst_f;
   input [3:0] opcode, mm, stat;
@@ -75,15 +76,70 @@ module ctrl (clk, rst_f, opcode, mm, stat, rf_we, alu_op, wb_sel);
     endcase
   end
 
-  always @(present_state, opcode)
-  begin
-
-  /* TODO: Generate combinational signals based on the FSM states and inputs. For Parts 2, 3 and 4 you will
+/* TODO: Generate combinational signals based on the FSM states and inputs. For Parts 2, 3 and 4 you will
        add the new control signals here. */
+  always @(present_state, opcode, mm)
+  begin
+    // Defaults
+    rf_we  = 1'b0;
+    wb_sel = 1'b0;
+    alu_op = 4'b0000;
 
+    // Decide the ALU mode for the current instruction
+    // (mode bits are alu_op[3:1])
+    // Keep mode stable through execute/mem/writeback so alu_result isn't overwritten.
+    if (opcode == REG_OP) begin
+      alu_op[3:1] = 3'b000;     // Rsa <funct> Rsb (funct comes from mm in sisc.v)
+    end
+    else if (opcode == REG_IM && mm == 4'h1) begin
+      alu_op[3:1] = 3'b010;     // ADI: Rsa + imm
+    end
+    else begin
+      alu_op[3:1] = 3'b000;     // harmless default
+    end
+
+    case (present_state)
+
+      execute: begin
+        // Request status update ONLY during execute for real ALU ops
+        if (opcode == REG_OP) begin
+          alu_op[0] = 1'b1;
+        end
+        else if (opcode == REG_IM && mm == 4'h1) begin
+          alu_op[0] = 1'b1;
+        end
+        // else: keep alu_op[0]=0
+      end
+
+      mem: begin
+        // Hold mode; do not update flags
+        alu_op[0] = 1'b0;
+      end
+
+      writeback: begin
+        // Hold mode; do not update flags
+        alu_op[0] = 1'b0;
+
+        // Write register for REG_OP and ADI
+        if (opcode == REG_OP) begin
+          rf_we  = 1'b1;
+          wb_sel = 1'b0;  // select ALU result
+        end
+        else if (opcode == REG_IM && mm == 4'h1) begin
+          rf_we  = 1'b1;
+          wb_sel = 1'b0;
+        end
+      end
+
+      default: begin
+        // fetch/decode/start states: keep defaults (and ALU mode already chosen above)
+        alu_op[0] = 1'b0;
+      end
+
+    endcase
   end
 
-// Halt on HLT instruction
+  // Halt on HLT instruction
   
   always @ (opcode)
   begin
