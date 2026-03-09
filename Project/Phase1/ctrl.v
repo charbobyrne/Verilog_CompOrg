@@ -134,7 +134,7 @@ module ctrl (clk, rst_f, opcode, mm, stat, rf_we, alu_op, wb_sel);
       end
 
       default: begin
-        // fetch/decode/start states: keep defaults
+        // fetch/decode/start states
         alu_op[0] = 1'b0;
       end
 
