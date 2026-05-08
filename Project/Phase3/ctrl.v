@@ -196,6 +196,12 @@ module ctrl (
           alu_op = 4'b0001;
         if (opcode == REG_IM)
           alu_op = 4'b0011;
+        // part 3: setting rb_sel one stage earlier so it functions
+        // properly in mem
+        if (opcode == STR && mm == 4'b0000)
+          rb_sel = 1'b1;
+        if (opcode == STR && mm == 4'b1000)
+          rb_sel = 1'b1;
       end
 
       // Existing part 1 ALU mem-stage hold behavior
