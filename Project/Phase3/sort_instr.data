@@ -1,18 +1,18 @@
-A0100000
-21700001
-12217000
-5100000D
-21300001
-A8430000
-A8530001
-12645000
-4200000C
-51000002
-B8530000
-B8430001
-21330001
-12631000
-7100FFF6
-12227000
-60000003
-F0000000
+A0100000 // 00 Load N
+21700001 // 01 R7 = 1
+12217000 // 02 R2=N-1 for outer counter
+5100000D // 03 when R2=0 -> DONE
+21300001 // 04 inner loop index
+A8430000 // 05 load current
+A8530001 // 06 load next
+12645000 // 07 compare
+4200000C // 08 if neg skip
+51000002 // 09 if 0 skip
+B8530000 // 0A store smaller 
+B8430001 // 0B store larger 
+21330001 // 0C next pair
+12631000 // 0D check if done
+7100FFF6 // 0E if not zero go back to load current
+12227000 // 0F decrement outer loop
+60000003 // 10 jump to outer loop
+F0000000 // 11 HALT
