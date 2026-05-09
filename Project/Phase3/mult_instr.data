@@ -1,0 +1,19 @@
+A0100000 // 00 R1 = a low
+A0300001 // 01 R3 = B multiplier
+21200000 // 02 A hi
+21400000 // 03 product low
+21500000 // 04 product hi
+21600020 // 05 loop counter
+21700001 // 06 R7 = 1
+16837000 // 07 check LSB
+51000002 // 08 skip if bit = 0
+11441000 // 09 add low
+13552000 // 0A add hi and the carry
+1A337000 // 0B shift ->
+1B117000 // 0C shift low <-
+1D227000 // 0D rotate hi <-
+2166FFFF // 0E decrement counter
+7100FFF7 // 0F loop until DONE
+B0400002 // 10 store low
+B0500003 // 11 store hi
+F0000000 // 12 HALT
