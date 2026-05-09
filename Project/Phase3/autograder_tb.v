@@ -184,9 +184,15 @@ module sisc_autograder_tb;
       //   M[9]:  FF000019  (from STX R5,R1,#0008)
 
       $display("  --- Data Memory ---");
+      $display("M[0]=%h", uut.u11.ram_array[0]);
+      $display("M[1]=%h", uut.u11.ram_array[1]);
+      $display("M[2]=%h", uut.u11.ram_array[2]);
+      $display("M[3]=%h", uut.u11.ram_array[3]);
+      $display("M[4]=%h", uut.u11.ram_array[4]);
+      $display("M[5]=%h", uut.u11.ram_array[5]);
+      $display("M[6]=%h", uut.u11.ram_array[6]);
       check_val("M[8]",  uut.u11.ram_array[8],  32'h00000006);
       check_val("M[9]",  uut.u11.ram_array[9],  32'hFF000019);
-
       $display("");
 
       // ----------------------------------------------------------

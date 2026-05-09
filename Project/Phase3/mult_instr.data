@@ -1,19 +1,27 @@
-A0100000 // 00 R1 = a low
+A0100000 // 00 R1 = A low
 A0300001 // 01 R3 = B multiplier
-21200000 // 02 A hi
+21200000 // 02 R2 = A high
 21400000 // 03 product low
-21500000 // 04 product hi
+21500000 // 04 product high
 21600020 // 05 loop counter
 21700001 // 06 R7 = 1
 16837000 // 07 check LSB
-51000002 // 08 skip if bit = 0
+51000006 // 08 skip add if bit = 0
 11441000 // 09 add low
-13552000 // 0A add hi and the carry
-1A337000 // 0B shift ->
-1B117000 // 0C shift low <-
-1D227000 // 0D rotate hi <-
-2166FFFF // 0E decrement counter
-7100FFF7 // 0F loop until DONE
-B0400002 // 10 store low
-B0500003 // 11 store hi
-F0000000 // 12 HALT
+58000002 // 0A if carry do carry add
+11552000 // 0B add high
+70000002 // 0C skip carry path
+11552000 // 0D add high
+21550001 // 0E add carry into high
+1A337000 // 0F shift multiplier right
+1F117000 // 10 shift A low left AND set carry
+58000002 // 11 if carry do carry shift
+1F227000 // 12 shift A high left
+70000002 // 13 skip carry shift
+1F227000 // 14 shift A high left
+21220001 // 15 add carry into A high
+2166FFFF // 16 decrement counter
+7100FFEF // 17 loop until done
+B0400002 // 18 store low
+B0500003 // 19 store high
+F0000000 // 1A HALT
